@@ -1,0 +1,7 @@
+<div class="select-content">
+    <input type="text" class="select-input" ng-keyup="getList(search)" ng-model="search">
+    <span ng-repeat="item in markList track by $index">{{item.value}}</span>
+    <ul class="select-list" ng-click="getValue($event)">
+        <li ng-repeat="item in selectList track by $index" data-key="{{item.id}}" data-value="{{item.value}}">{{item.value}}</li>
+    </ul>
+</div>

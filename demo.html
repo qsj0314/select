@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en"  ng-app="MyModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .select-content{
+            border: 1px solid #000;
+        }
+    </style>
+    <link rel="stylesheet" href="./template.css">
+</head>
+<body ng-controller="myModuleController">
+
+<select2 list = "dataList" mark-list = "req" single = false></select2>
+{{req}}
+<script src="https://cdn.bootcss.com/angular.js/1.5.3/angular.js"></script>
+<script>
+    var myModule = angular.module("MyModule", []);
+    myModule.controller('myModuleController', function ($scope) {
+        $scope.req = []
+       $scope.dataList = [{
+           id: '01',
+           value: 'value1'
+       }, {
+           id: '02',
+           value: 'value2'
+       }, {
+           id: '03',
+           value: 'aaa'
+       }]
+    });
+    myModule.directive("select2", function () {
+        return {
+            restrict: 'E',
+            templateUrl: './template.html',
+            replace: true,
+            scope:{
+                list: '=',
+                markList: '='
+            },
+            link: function($scope, ele, attrs, $ele){
+                $scope.selectList = [];
+                $scope.list.forEach(function (value) {
+                    $scope.selectList.push(value);
+                })
+                $scope.getList = function (searchKey){
+                    $scope.tempList = [];
+                    console.log(searchKey);
+                    if (searchKey) {
+                        $scope.list.forEach(function (value) {
+                            if (value.value.startsWith(searchKey)){
+                                console.log($scope.tempList);
+                                $scope.tempList.push(value);
+                            }
+                        })
+                        $scope.selectList = $scope.tempList;
+                    } else{
+                        $scope.selectList = $scope.list;
+                    }
+                }
+                $scope.getValue = function (event){
+                    for (var i = 0; i < $scope.markList.length; i++) {
+                        if ($scope.markList[i].id === event.target.getAttribute('data-key')){
+                            return false;
+                        }
+                    }
+                    if (attrs.single === true) {
+                        //如果这里没有明确写true
+                        $scope.markList = [];
+                        $scope.markList.push({id: event.target.getAttribute('data-key'), value: event.target.getAttribute('data-value')});
+                    } else {
+                        $scope.markList.push({id: event.target.getAttribute('data-key'), value: event.target.getAttribute('data-value')});
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
